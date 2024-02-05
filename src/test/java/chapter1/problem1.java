@@ -23,7 +23,7 @@ public class problem1 {
     }
 
     @Test
-    public void problem2_text_blocks() {
+    public void problem2_3_4_text_blocks() {
         String s1 = """
                 This is a
                 multiline
@@ -49,4 +49,51 @@ string
 
         assert(true);
     }
+
+    @Test
+    public void problem5_text_blocks() {
+        String s1 = """
+                This is a
+                multiline
+                string
+                """;
+
+        int loc = s1.indexOf("multiline");
+        assertEquals(10, loc);
+    }
+
+    @Test
+    public void problem6_text_blocks() {
+        String s1 = """
+                This is a
+                the "new" multiline
+                \r
+                string
+                """;
+
+        System.out.println(s1);
+        assert(true);
+    }
+
+    @Test
+    public void problem7_text_blocks() {
+        String s1 = """
+                This is a
+                the "new" multiline
+                \r
+                string
+                """;
+
+        int l = s1.length();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < l; i++) {
+            System.out.println(i + " " + s1.charAt(i));
+            if (!Character.isISOControl(s1.charAt(i))) {
+                sb.append(s1.charAt(i));
+            }
+        }
+        System.out.println(sb.toString());
+        assert(true);
+    }
+
 }

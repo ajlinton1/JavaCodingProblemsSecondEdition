@@ -1,6 +1,7 @@
 package chapter1;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -94,6 +95,19 @@ string
         }
         System.out.println(sb.toString());
         assert(true);
+    }
+
+    @Test
+    public void problem8_variables() {
+        String name = "John";
+        String s = """
+                This is a
+                multiline %s
+                string
+                """;
+        String s1 = String.format(s, name);
+        int pos = s1.indexOf(name);
+        assertTrue(pos > 0);
     }
 
 }

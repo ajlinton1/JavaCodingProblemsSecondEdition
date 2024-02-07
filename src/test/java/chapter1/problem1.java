@@ -2,7 +2,6 @@ package chapter1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 public class problem1 {
@@ -108,6 +107,15 @@ string
         String s1 = String.format(s, name);
         int pos = s1.indexOf(name);
         assertTrue(pos > 0);
+
+        String s2 = """
+                This is a
+                multiline %s
+                string
+                """.formatted(name);
+        int pos1 = s2.indexOf(name);
+        assertTrue(pos1 > 0);
+
     }
 
 }

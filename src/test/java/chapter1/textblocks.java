@@ -1,10 +1,12 @@
 package chapter1;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.jupiter.api.Test;
 
-public class problem1 {
+import textBlocks.Strings;
+
+import static org.junit.Assert.*;
+
+public class textblocks {
 
     @Test
     public void test() {
@@ -118,4 +120,15 @@ string
 
     }
 
+    @Test
+    public void problem12_concatenating() {
+        var result = Strings.concatenating();
+        assertNotNull(result);
+    }
+
+    @Test
+    public void problem12_StringBuilder() {
+        var result = Strings.concatenatingStringBuilder();
+        assertNotNull(result);
+    }
 }

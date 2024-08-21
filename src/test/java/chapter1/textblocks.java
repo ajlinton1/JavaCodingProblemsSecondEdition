@@ -1,6 +1,6 @@
 package chapter1;
 
-import org.junit.jupiter.api.Test;
+import org.junit.*;
 
 import textBlocks.Strings;
 

@@ -24,4 +24,28 @@ public class math {
         }
         return Math.abs(value);
     }
+
+    @Test
+    public void problem21_math(){
+        int intMinValue = Integer.MIN_VALUE;
+        int divisor = -1;
+        try {
+            int quotient = intMinValue / divisor;
+            System.out.println("Quotient: " + quotient); // Overflow occurs here
+        } catch (ArithmeticException e) {
+            System.out.println("Overflow occurred: " + e.getMessage());
+        }
+
+        // Solution to handle overflow
+        int safeQuotient = safeDivide(intMinValue, divisor);
+        System.out.println("Safe Quotient: " + safeQuotient);
+
+    }
+
+    public static int safeDivide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE; // Handle overflow case
+        }
+        return dividend / divisor;
+    }
 }

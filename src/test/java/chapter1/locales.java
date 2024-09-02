@@ -2,6 +2,8 @@ package chapter1;
 
 import org.junit.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +39,22 @@ public class locales {
         // Get the best matching locale
         Locale bestMatchingLocale = Locale.lookup(languagePriorityList, List.of(Locale.getAvailableLocales()));
         assertNotNull(bestMatchingLocale);
+    }
+
+    @Test
+    public void problem18_locales() {
+        Locale locale = new Locale("fr", "FR");
+
+        // Step 2: Define a custom date-time format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy HH:mm:ss", locale);
+
+        // Step 3: Use the DateTimeFormatter with the custom Locale to format the current date-time
+        LocalDateTime now = LocalDateTime.now();
+        String formattedDate = now.format(formatter);
+
+        // Print the formatted date-time
+        System.out.println(formattedDate);
+        assertNotNull(formattedDate);
     }
 
 }

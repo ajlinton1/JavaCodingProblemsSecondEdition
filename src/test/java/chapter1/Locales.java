@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import static org.junit.Assert.*;
 
-public class locales {
+public class Locales {
 
     @Test
     public void problem17_locales() {

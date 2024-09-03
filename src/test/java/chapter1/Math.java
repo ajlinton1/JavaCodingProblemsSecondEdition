@@ -3,10 +3,12 @@ package chapter1;
 import org.junit.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class math {
+public class Math {
 
     @Test
     public strictfp void problem19_floating_point(){
@@ -16,7 +18,7 @@ public class math {
 
     @Test
     public void problem20_math(){
-        assertNotEquals(Integer.MAX_VALUE, Math.abs(Integer.MIN_VALUE));
+        Assert.assertNotEquals(Integer.MAX_VALUE, java.lang.Math.abs(Integer.MIN_VALUE));
 
         assertEquals(safeAbs(Integer.MAX_VALUE), safeAbs(Integer.MIN_VALUE));
     }
@@ -25,7 +27,7 @@ public class math {
         if (value == Integer.MIN_VALUE) {
             return Integer.MAX_VALUE; // Handle overflow case
         }
-        return Math.abs(value);
+        return java.lang.Math.abs(value);
     }
 
     @Test
@@ -71,7 +73,7 @@ public class math {
         if (dividend == Integer.MIN_VALUE && divisor == -1) {
             return Integer.MAX_VALUE; // Handle overflow case
         }
-        return Math.floorDiv(dividend, divisor);
+        return java.lang.Math.floorDiv(dividend, divisor);
     }
 
     // Method to safely compute the smallest value greater than or equal to the algebraic quotient
@@ -79,7 +81,7 @@ public class math {
         if (dividend == Integer.MIN_VALUE && divisor == -1) {
             return Integer.MAX_VALUE; // Handle overflow case
         }
-        return (int) Math.ceil((double) dividend / divisor);
+        return (int) java.lang.Math.ceil((double) dividend / divisor);
     }
 
     @Test
@@ -87,14 +89,14 @@ public class math {
         double number = 123.456;
 
         // Technique 1: Using Math.floor
-        double integralPart1 = Math.floor(number);
+        double integralPart1 = java.lang.Math.floor(number);
         double fractionalPart1 = number - integralPart1;
         System.out.println("Using Math.floor:");
         System.out.println("Integral Part: " + integralPart1);
         System.out.println("Fractional Part: " + fractionalPart1);
 
         // Technique 2: Using Math.ceil
-        double integralPart2 = Math.ceil(number) - 1;
+        double integralPart2 = java.lang.Math.ceil(number) - 1;
         double fractionalPart2 = number - integralPart2;
         System.out.println("Using Math.ceil:");
         System.out.println("Integral Part: " + integralPart2);
@@ -129,7 +131,7 @@ public class math {
 
     // Technique 1: Using Math.floor and Math.ceil
     public static boolean isIntegerUsingFloorCeil(double number) {
-        return Math.floor(number) == Math.ceil(number);
+        return java.lang.Math.floor(number) == java.lang.Math.ceil(number);
     }
 
     // Technique 2: Using modulo operation
@@ -170,5 +172,57 @@ public class math {
         // Demonstrating unsigned remainder
         int unsignedRemResult = Integer.remainderUnsigned(dividend, divisor);
         System.out.println("Unsigned remainder result: " + unsignedRemResult);
+    }
+
+    @Test
+    public void problem26_floor() {
+        int dividend = -5;
+        int divisor = 3;
+
+        // Floor modulus
+        int floorMod = java.lang.Math.floorMod(dividend, divisor);
+        System.out.println("Floor Modulus: " + floorMod);
+
+        // Ceil modulus
+        int ceilMod = ceilMod(dividend, divisor);
+        System.out.println("Ceil Modulus: " + ceilMod);
+    }
+
+    // Method to compute the ceil modulus
+    public static int ceilMod(int dividend, int divisor) {
+        return dividend - divisor * (int) java.lang.Math.ceil((double) dividend / divisor);
+    }
+
+    @Test
+    public void problem27_primeFactors() {
+        assertEquals(List.of(2, 2, 2, 7), getPrimeFactors(56));
+        assertEquals(List.of(3, 3, 5), getPrimeFactors(45));
+        assertEquals(List.of(11), getPrimeFactors(11));
+        assertEquals(List.of(), getPrimeFactors(1));
+    }
+
+    // Method to check if a number is prime
+    public boolean isPrime(int number) {
+        if (number <= 1) {
+            return false;
+        }
+        for (int i = 2; i <= java.lang.Math.sqrt(number); i++) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Method to collect all prime factors of a given positive number
+    public List<Integer> getPrimeFactors(int number) {
+        List<Integer> primeFactors = new ArrayList<>();
+        for (int i = 2; i <= number; i++) {
+            while (isPrime(i) && number % i == 0) {
+                primeFactors.add(i);
+                number /= i;
+            }
+        }
+        return primeFactors;
     }
 }

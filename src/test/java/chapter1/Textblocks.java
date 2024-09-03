@@ -6,7 +6,7 @@ import textBlocks.Strings;
 
 import static org.junit.Assert.*;
 
-public class textblocks {
+public class Textblocks {
 
     @Test
     public void test() {

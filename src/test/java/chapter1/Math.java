@@ -225,4 +225,65 @@ public class Math {
         }
         return primeFactors;
     }
+
+    @Test
+    public void problem28_squareRoot() {
+        double number = 25.0;
+        double sqrt = babylonianSqrt(number);
+        System.out.println("The square root of " + number + " is approximately " + sqrt);
+    }
+
+    double babylonianSqrt(double S) {
+        if (S < 0) {
+            throw new IllegalArgumentException("Cannot compute square root of a negative number");
+        }
+        if (S == 0) {
+            return 0;
+        }
+
+        double x0 = S / 2;
+        double epsilon = 1e-7;
+        double x1 = (x0 + S / x0) / 2;
+
+        while (java.lang.Math.abs(x1 - x0) > epsilon) {
+            x0 = x1;
+            x1 = (x0 + S / x0) / 2;
+        }
+
+        return x1;
+    }
+
+    @Test
+    public void problem29_rounding() {
+        double number = 123.456789;
+        int decimals = 2;
+
+        double roundedMathRound = roundUsingMathRound(number, decimals);
+        double roundedBigDecimal = roundUsingBigDecimal(number, decimals);
+        double roundedStringFormat = roundUsingStringFormat(number, decimals);
+
+        System.out.println("Original number: " + number);
+        System.out.println("Rounded using Math.round: " + roundedMathRound);
+        System.out.println("Rounded using BigDecimal: " + roundedBigDecimal);
+        System.out.println("Rounded using String.format: " + roundedStringFormat);
+    }
+
+    public double roundUsingMathRound(double value, int decimals) {
+        double scale = java.lang.Math.pow(10, decimals);
+        return java.lang.Math.round(value * scale) / scale;
+    }
+
+    // Method using BigDecimal
+    public double roundUsingBigDecimal(double value, int decimals) {
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(decimals, BigDecimal.ROUND_HALF_UP);
+        return bd.doubleValue();
+    }
+
+    // Method using String.format
+    public double roundUsingStringFormat(double value, int decimals) {
+        String format = "%." + decimals + "f";
+        return Double.parseDouble(String.format(format, value));
+    }
+
 }

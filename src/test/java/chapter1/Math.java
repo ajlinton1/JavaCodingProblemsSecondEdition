@@ -5,6 +5,11 @@ import org.junit.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.random.RandomGenerator;
+import java.util.random.RandomGeneratorFactory;
+import java.util.SplittableRandom;
+import java.util.random.Xoroshiro128Plus;
+import java.util.random.L64X128MixRandom;
 
 import static org.junit.Assert.*;
 
@@ -286,4 +291,105 @@ public class Math {
         return Double.parseDouble(String.format(format, value));
     }
 
+    @Test
+    public void problem30_Clamping(){
+        double value = 10.5;
+        double min = 5.0;
+        double max = 10.0;
+
+        double clampedValue = clamp(value, min, max);
+        System.out.println("Clamped value: " + clampedValue);
+        assertTrue(clampedValue <= max);
+    }
+
+    public static double clamp(double value, double min, double max) {
+        if (value < min) {
+            return min;
+        } else if (value > max) {
+            return max;
+        } else {
+            return value;
+        }
+    }
+
+    @Test
+    public void problem31_multiply() {
+        int a = 6;
+        int b = 7;
+        int product = multiply(a, b);
+        assertEquals(product, 42);
+    }
+
+    public int multiply(int a, int b) {
+        int sumSquare = (a + b) * (a + b);
+        int diffSquare = (a - b) * (a - b);
+        return (sumSquare - diffSquare) / 4;
+    }
+
+    @Test
+    public void problem32_tau() {
+        /* Explain the meaning of TAU in geometry/trigonometry, and write a program that solves the following problem: A circle has a circumference of 21.33 cm. What is the radius of the circle?*/
+        double circumference = 21.33;
+        double radius = calculateRadius(circumference);
+        System.out.println("The radius of the circle with circumference " + circumference + " cm is approximately " + radius + " cm.");
+    }
+
+    final double TAU = 2 * java.lang.Math.PI;
+
+    // Method to calculate the radius from the circumference
+    double calculateRadius(double circumference) {
+        return circumference / TAU;
+    }
+
+    @Test
+    public void problem33_random() {
+        useRandom();
+        useSplittableRandom();
+        useXoroshiro128Plus();
+        useL64X128MixRandom();
+    }
+
+    // Method to use java.util.Random
+    void useRandom() {
+        RandomGenerator random = new java.util.Random();
+        System.out.println("Random: " + random.nextInt());
+    }
+
+    // Method to use SplittableRandom
+    void useSplittableRandom() {
+        RandomGenerator random = new SplittableRandom();
+        System.out.println("SplittableRandom: " + random.nextInt());
+    }
+
+    // Method to use Xoroshiro128Plus
+    void useXoroshiro128Plus() {
+        RandomGenerator random = new Xoroshiro128Plus();
+        System.out.println("Xoroshiro128Plus: " + random.nextInt());
+    }
+
+    // Method to use L64X128MixRandom
+    void useL64X128MixRandom() {
+        RandomGenerator random = new L64X128MixRandom();
+        System.out.println("L64X128MixRandom: " + random.nextInt());
+    }
+
+    @Test
+    public void problem34_random1() {
+        /* Write a program that fills an array of long arrays with pseudo-random numbers in a parallel and non-parallel fashion. */
+    }
+
+    @Test
+    public void problem35_random2() {
+        /* Write a program that creates a stream of pseudo-random numbers and a stream of pseudo-random generators. */
+    }
+
+    @Test
+    public void problem36_random3() {
+        /* Write a program that instantiates a legacy pseudo-random generator (for instance, Random) that can delegate method calls to a JDK 17 RandomGenerator. */
+    }
+
+    @Test
+    public void problem37_random4() {
+        /* Explain and exemplify the usage of pseudo-random generators in a multithreaded environment (for instance, using an ExecutorService). */
+    }
 }

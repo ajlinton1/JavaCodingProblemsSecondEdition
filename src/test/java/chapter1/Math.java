@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.random.RandomGenerator;
 import java.util.random.RandomGeneratorFactory;
 import java.util.SplittableRandom;
-import java.util.random.Xoroshiro128Plus;
-import java.util.random.L64X128MixRandom;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
+import java.util.Arrays;
+import java.util.stream.Stream;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -345,8 +349,11 @@ public class Math {
     public void problem33_random() {
         useRandom();
         useSplittableRandom();
-        useXoroshiro128Plus();
-        useL64X128MixRandom();
+/*        useXoroshiro128Plus();
+        useL64X128MixRandom(); */
+        /* import java.util.random.Xoroshiro128Plus;
+import java.util.random.L64X128MixRandom;
+*/
     }
 
     // Method to use java.util.Random
@@ -362,30 +369,104 @@ public class Math {
     }
 
     // Method to use Xoroshiro128Plus
-    void useXoroshiro128Plus() {
+/*    void useXoroshiro128Plus() {
         RandomGenerator random = new Xoroshiro128Plus();
         System.out.println("Xoroshiro128Plus: " + random.nextInt());
-    }
+    } */
 
     // Method to use L64X128MixRandom
-    void useL64X128MixRandom() {
+/*    void useL64X128MixRandom() {
         RandomGenerator random = new L64X128MixRandom();
         System.out.println("L64X128MixRandom: " + random.nextInt());
-    }
+    } */
 
     @Test
     public void problem34_random1() {
         /* Write a program that fills an array of long arrays with pseudo-random numbers in a parallel and non-parallel fashion. */
+        int outerSize = 10;
+        int innerSize = 1000;
+        long[][] array = new long[outerSize][innerSize];
+
+        // Fill array in non-parallel fashion
+        fillArrayNonParallel(array);
+        System.out.println("Non-Parallel Array: " + Arrays.deepToString(array));
+        assertNotNull(array);
+
+        // Fill array in parallel fashion
+        fillArrayParallel(array);
+        System.out.println("Parallel Array: " + Arrays.deepToString(array));
+        assertNotNull(array);
+    }
+
+    public static void fillArrayNonParallel(long[][] array) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[i].length; j++) {
+                array[i][j] = ThreadLocalRandom.current().nextLong();
+            }
+        }
+    }
+
+    // Method to fill array in parallel fashion
+    void fillArrayParallel(long[][] array) {
+        ForkJoinPool.commonPool().invoke(new FillArrayTask(array, 0, array.length));
+    }
+
+    // RecursiveAction to fill array in parallel
+    static class FillArrayTask extends RecursiveAction {
+        private static final int THRESHOLD = 1; // Threshold for splitting tasks
+        private final long[][] array;
+        private final int start;
+        private final int end;
+
+        FillArrayTask(long[][] array, int start, int end) {
+            this.array = array;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        protected void compute() {
+            if (end - start <= THRESHOLD) {
+                for (int i = start; i < end; i++) {
+                    for (int j = 0; j < array[i].length; j++) {
+                        array[i][j] = ThreadLocalRandom.current().nextLong();
+                    }
+                }
+            } else {
+                int mid = (start + end) / 2;
+                invokeAll(new FillArrayTask(array, start, mid), new FillArrayTask(array, mid, end));
+            }
+        }
     }
 
     @Test
     public void problem35_random2() {
         /* Write a program that creates a stream of pseudo-random numbers and a stream of pseudo-random generators. */
+        Stream<Long> randomNumbers = ThreadLocalRandom.current().longs(10).boxed();
+        randomNumbers.forEach(System.out::println);
+
+        // Stream of pseudo-random generators
+        Stream<RandomGenerator> randomGenerators = Stream.generate(() -> RandomGeneratorFactory.of("L64X128MixRandom").create()).limit(5);
+        randomGenerators.forEach(generator -> System.out.println(generator.getClass().getName()));
     }
 
     @Test
     public void problem36_random3() {
         /* Write a program that instantiates a legacy pseudo-random generator (for instance, Random) that can delegate method calls to a JDK 17 RandomGenerator. */
+        RandomGenerator randomGenerator = RandomGeneratorFactory.of("L64X128MixRandom").create();
+        Random legacyRandom = new LegacyRandomAdapter(randomGenerator);
+
+        // Demonstrate usage
+        System.out.println("Random int: " + legacyRandom.nextInt());
+        System.out.println("Random long: " + legacyRandom.nextLong());
+        System.out.println("Random boolean: " + legacyRandom.nextBoolean());
+        System.out.println("Random float: " + legacyRandom.nextFloat());
+        System.out.println("Random double: " + legacyRandom.nextDouble());
+
+        byte[] bytes = new byte[10];
+        legacyRandom.nextBytes(bytes);
+        System.out.println("Random bytes: " + Arrays.toString(bytes));
+
     }
 
     @Test

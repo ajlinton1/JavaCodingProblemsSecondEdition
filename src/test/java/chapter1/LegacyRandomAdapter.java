@@ -1,7 +1,6 @@
 package chapter1;
 
 import java.util.random.RandomGenerator;
-import java.util.random.RandomGeneratorFactory;
 import java.util.Random;
 
 public class LegacyRandomAdapter extends Random {

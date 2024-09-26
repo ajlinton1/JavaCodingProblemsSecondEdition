@@ -9,11 +9,6 @@ import static org.junit.Assert.*;
 public class Textblocks {
 
     @Test
-    public void test() {
-        assertEquals(1, 1);
-    }
-
-    @Test
     public void problem1_multiline_string() {
         String s = """
                 This is a

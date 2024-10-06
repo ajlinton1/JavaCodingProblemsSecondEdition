@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Chapter2 {
@@ -62,8 +63,12 @@ public class Chapter2 {
             checkSubRange(2, 5, 10); // Valid range
             System.out.println("Sub-range is within bounds.");
 
+            Objects.checkFromIndexSize(2, 5, 10);
+
             checkSubRange(8, 5, 10); // Invalid range, should throw exception
             System.out.println("Sub-range is within bounds.");
+
+            Objects.checkFromIndexSize(8, 5, 10);
         } catch (IndexOutOfBoundsException e) {
             System.err.println(e.getMessage());
         }
@@ -89,7 +94,8 @@ public class Chapter2 {
         if (obj == null) {
             return "null";
         }
-        return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+//        return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+        return obj.getClass().getName() + "@" + Objects.toIdentityString(obj);
     }
 
     @Test

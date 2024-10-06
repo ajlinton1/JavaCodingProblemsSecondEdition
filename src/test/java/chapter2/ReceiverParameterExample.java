@@ -11,7 +11,13 @@ public class ReceiverParameterExample {
         this.value = value; // Refers to the instance variable
     }
 
+/*
     public int getValue(ReceiverParameterExample this) {
+        return this.value; // Refers to the instance variable
+    }
+*/
+
+    public int getValue() {
         return this.value; // Refers to the instance variable
     }
 

@@ -51,7 +51,6 @@ public class Math {
         // Solution to handle overflow
         int safeQuotient = safeDivide(intMinValue, divisor);
         System.out.println("Safe Quotient: " + safeQuotient);
-
     }
 
     public static int safeDivide(int dividend, int divisor) {

@@ -34,11 +34,11 @@ public class Chapter3 {
         assert(true);
     }
 
-    public static YearMonth convertDateToYearMonth(Date date) {
+    static YearMonth convertDateToYearMonth(Date date) {
         return YearMonth.from(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     }
 
-    public static Date convertYearMonthToDate(YearMonth yearMonth) {
+    static Date convertYearMonthToDate(YearMonth yearMonth) {
         return Date.from(yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
@@ -58,14 +58,14 @@ public class Chapter3 {
         assert(true);
     }
 
-    public static int[] extractWeekYearFromLocalDate(LocalDate date) {
+    static int[] extractWeekYearFromLocalDate(LocalDate date) {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         int week = date.get(weekFields.weekOfYear());
         int year = date.getYear();
         return new int[]{week, year};
     }
 
-    public static int[] extractWeekYearFromDate(Date date) {
+    static int[] extractWeekYearFromDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int week = calendar.get(Calendar.WEEK_OF_YEAR);
@@ -73,11 +73,11 @@ public class Chapter3 {
         return new int[]{week, year};
     }
 
-    public static int convertYearMonthToInt(YearMonth yearMonth) {
+    static int convertYearMonthToInt(YearMonth yearMonth) {
         return yearMonth.getYear() * 12 + yearMonth.getMonthValue();
     }
 
-    public static YearMonth convertIntToYearMonth(int value) {
+    static YearMonth convertIntToYearMonth(int value) {
         int year = value / 12;
         int month = value % 12;
         return YearMonth.of(year, month == 0 ? 12 : month);
@@ -97,7 +97,7 @@ public class Chapter3 {
         System.out.println("Converted YearMonth: " + convertedYearMonth);
     }
 
-    public static Date convertWeekYearToDate(int week, int year) {
+    static Date convertWeekYearToDate(int week, int year) {
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.set(Calendar.YEAR, year);
@@ -106,7 +106,7 @@ public class Chapter3 {
         return calendar.getTime();
     }
 
-    public static LocalDate convertWeekYearToLocalDate(int week, int year) {
+    static LocalDate convertWeekYearToLocalDate(int week, int year) {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         return LocalDate.now()
                 .withYear(year)
@@ -134,7 +134,24 @@ public class Chapter3 {
         // Extract week and year from LocalDate
         int[] weekYearFromLocalDate = extractWeekYearFromLocalDate(localDate);
         System.out.println("Extracted from LocalDate - Week: " + weekYearFromLocalDate[0] + ", Year: " + weekYearFromLocalDate[1]);
+    }
 
+    static boolean isLeapYear(int year) {
+        if (year % 4 == 0) {
+            if (year % 100 == 0) {
+                return year % 400 == 0; // Leap year if divisible by 400
+            }
+            return true; // Leap year if divisible by 4 but not 100
+        }
+        return false; // Not a leap year if not divisible by 4
+    }
+
+    static boolean isLeapYearCalendar(int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
+        // Check if February has 29 days (i.e., leap year)
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH) == 29;
     }
 
     @Test
@@ -142,6 +159,45 @@ public class Chapter3 {
         /*
         Checking for a leap year: Let’s consider that an integer is given representing a year. Write an application that checks if this year is a leap year. Provide at least three solutions.
          */
+        int year = 2024;
+        boolean leapYear = isLeapYear(year);
+        assert (leapYear);
+
+        leapYear = Year.of(year).isLeap();
+        assert (leapYear);
+
+        leapYear = isLeapYearCalendar(year);
+        assert (leapYear);
+    }
+
+    static int getQuarter(LocalDate date) {
+        int month = date.getMonthValue();
+        if (month <= 3) {
+            return 1;
+        }
+        if (month <= 6) {
+            return 2;
+        }
+        if (month <= 9) {
+            return 3;
+        }
+        return 4;
+    }
+
+    static String getQuarterString(LocalDate date) {
+        int quarter = getQuarter(date);
+        switch (quarter) {
+            case 1:
+                return "Q1";
+            case 2:
+                return "Q2";
+            case 3:
+                return "Q3";
+            case 4:
+                return "Q4";
+            default:
+                return null;
+        }
     }
 
     @Test
@@ -149,6 +205,30 @@ public class Chapter3 {
         /*
         Calculating the quarter of a given date: Let’s consider that a java.util.Date is given. Write a program that returns the quarter containing this date as an integer (1, 2,3, or 4) and as a string (Q1, Q2, Q3, or Q4).
          */
+        Date currentDate = new Date();
+        int quarter = getQuarter(currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        assert (quarter == 1);
+
+        String quarterString = getQuarterString(currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        assert (quarterString.equals("Q1"));
+    }
+
+    static Date getFirstDateOfQuarter(int quarter, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.MONTH, quarter * 3 - 3);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+
+    static Date getLastDateOfQuarter(int quarter, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.MONTH, quarter * 3 - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
     }
 
     @Test
@@ -156,6 +236,20 @@ public class Chapter3 {
         /*
         Getting the first and last day of a quarter: Let’s consider that a java.util.Date is given. Write a program that returns the first and last day of the quarter containing this date. Represent the returned days as Date (implementation based on Calendar) and LocalDate (implementation based on the JDK 8 Date/Time API).
          */
+
+        Date currentDate = new Date();
+        int year = currentDate.getYear() + 1900;
+        int quarter = getQuarter(currentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        Date firstDate = getFirstDateOfQuarter(quarter, year);
+
+        Date lastDate = getLastDateOfQuarter(quarter, year);
+
+        assert(firstDate.compareTo(lastDate) < 0);
+
+        LocalDate currentLocalDate = LocalDate.now();
+        LocalDate firstLocalDate = currentLocalDate.withMonth(quarter * 3 - 3 + 1).withDayOfMonth(1);
+        LocalDate lastLocalDate = currentLocalDate.withMonth(quarter * 3).withDayOfMonth(currentLocalDate.lengthOfMonth());
+        assert(firstLocalDate.compareTo(lastLocalDate) < 0);
     }
 
     @Test

@@ -7,8 +7,8 @@ import org.junit.*;
 
 import textBlocks.Strings;
 
-import static java.lang.StringTemplate.STR;
-import static java.lang.StringTemplate.*;
+//import static java.lang.StringTemplate.STR;
+//import static java.lang.StringTemplate.*;
 import static org.junit.Assert.*;
 
 public class Textblocks {
@@ -280,8 +280,8 @@ string
         int b = 10;
 
         // Using String templates
-        String result = STR."The sum of {a} and {b} is {a + b}.";
-        System.out.println(result); // Output: The sum of 5 and 10 is 15.
+//        String result = STR."The sum of {a} and {b} is {a + b}.";
+//        System.out.println(result); // Output: The sum of 5 and 10 is 15.
 
     }
 
@@ -289,7 +289,7 @@ string
     @Test
     public void problem16_CustomTemplateProcessor() {
 
-        StringTemplate.Processor<String, RuntimeException> uppercaseProcessor = template -> {
+  /*      StringTemplate.Processor<String, RuntimeException> uppercaseProcessor = template -> {
             StringBuilder result = new StringBuilder();
             // Concatenate fragments and interpolated values
             for (int i = 0; i < template.fragments().size(); i++) {
@@ -300,16 +300,16 @@ string
             }
             // Return the result in uppercase
             return result.toString().toUpperCase();
-        };
+        }; */
 
 
 
         // Use the custom processor
-        String output = uppercaseProcessor."Hello, Alice! Welcome to Wonderland.";
+//        String output = uppercaseProcessor."Hello, Alice! Welcome to Wonderland.";
 
-        System.out.println(output);
+  //      System.out.println(output);
 
-        assert(output.equals("HELLO, ALICE! WELCOME TO WONDERLAND."));
+//        assert(output.equals("HELLO, ALICE! WELCOME TO WONDERLAND."));
     }
 
 }

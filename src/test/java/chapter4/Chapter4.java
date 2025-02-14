@@ -378,8 +378,8 @@ public class Chapter4 {
         Rectangle rectangle = new Rectangle(null, new Point(10, 10)); // Simulate a nested null
 
         switch (rectangle) {
-//            case Rectangle(Point(int x1, int y1), null) ->
-//                    System.out.println("Top-left corner is null, but bottom-right: (" + x2 + ", " + y2 + ")");
+            case Rectangle(Point(int x1, int y1),  Point bottomRight) when bottomRight == null ->
+                    System.out.println("Top-left corner is null, but bottom-right: (" + x1 + ", " + y1 + ")");
             case Rectangle(Point(int x1, int y1), Point(int x2, int y2)) ->
                     System.out.println("Rectangle corners: Top-left: (" + x1 + ", " + y1 + "), Bottom-right: (" + x2 + ", " + y2 + ")");
             default ->
@@ -391,15 +391,15 @@ public class Chapter4 {
     public static int evaluate(Expr expr) {
         return switch (expr) {
             case Constant(int value) -> value; // Base case: constant value
-/*            case BinaryOp("+", Expr left, Expr right) -> evaluate(left) + evaluate(right);
-            case BinaryOp("-", Expr left, Expr right) -> evaluate(left) - evaluate(right);
-            case BinaryOp("*", Expr left, Expr right) -> evaluate(left) * evaluate(right);
-            case BinaryOp("/", Expr left, Expr right) -> {
+            case BinaryOp(String operator, Expr left, Expr right) when operator.equals("+") -> evaluate(left) + evaluate(right);
+            case BinaryOp(String operator, Expr left, Expr right) when operator.equals("_") -> evaluate(left) - evaluate(right);
+            case BinaryOp(String operator, Expr left, Expr right) when operator.equals("*") -> evaluate(left) * evaluate(right);
+            case BinaryOp(String operator, Expr left, Expr right) when operator.equals("/") -> {
                 int denominator = evaluate(right);
                 if (denominator == 0) throw new ArithmeticException("Division by zero");
                 yield evaluate(left) / denominator;
             }
-            case UnaryOp("-", Expr operand) -> -evaluate(operand); */
+            case UnaryOp(String operator, Expr operand) when operator.equals("-") -> -evaluate(operand);
             default -> throw new IllegalStateException("Unexpected expression: " + expr);
         };
     }
@@ -408,16 +408,16 @@ public class Chapter4 {
     public static Expr simplify(Expr expr) {
         return switch (expr) {
             case Constant(int value) -> expr; // Constant is already simplified
-/*            case UnaryOp("-", Constant(int value)) -> new Constant(-value); // Simplify unary negation on a constant
+            case UnaryOp(String operator, Constant(int value)) when operator.equals("_") -> new Constant(-value); // Simplify unary negation on a constant
             case UnaryOp(String operator, Expr operand) -> new UnaryOp(operator, simplify(operand)); // Simplify operand(s)
-            case BinaryOp("+", Constant(0), Expr right) -> simplify(right); // Add 0 -> simplify to the right operand
-            case BinaryOp("+", Expr left, Constant(0)) -> simplify(left);  // Add 0 -> simplify to the left operand
-            case BinaryOp("*", Constant(1), Expr right) -> simplify(right); // Multiply by 1 -> simplify to the right operand
-            case BinaryOp("*", Expr left, Constant(1)) -> simplify(left);  // Multiply by 1 -> simplify to the left operand
-            case BinaryOp("*", Constant(0), Expr right) -> new Constant(0); // Multiply by 0 -> result is 0
-            case BinaryOp("*", Expr left, Constant(0)) -> new Constant(0);  // Multiply by 0 -> result is 0
+            case BinaryOp(String operator, Constant(int value), Expr right) when operator.equals("+") && value == 0 -> simplify(right); // Add 0 -> simplify to the right operand
+            case BinaryOp(String operator, Expr left, Constant(int value)) when operator.equals("+") && value == 0 -> simplify(left);  // Add 0 -> simplify to the left operand
+            case BinaryOp(String operator, Constant(int value), Expr right) when operator.equals("*") && value == 1 -> simplify(right); // Multiply by 1 -> simplify to the right operand
+            case BinaryOp(String operator, Expr left, Constant(int value)) when operator.equals("*") && value == 1-> simplify(left);  // Multiply by 1 -> simplify to the left operand
+            case BinaryOp(String operator, Constant(int value), Expr right) when operator.equals("*") && value == 0 -> new Constant(0); // Multiply by 0 -> result is 0
+            case BinaryOp(String operator, Expr left, Constant(int value)) when operator.equals("*") && value == 0 -> new Constant(0);  // Multiply by 0 -> result is 0
             case BinaryOp(String operator, Expr left, Expr right) ->
-                    new BinaryOp(operator, simplify(left), simplify(right)); // Simplify both sides of the operation */
+                    new BinaryOp(operator, simplify(left), simplify(right)); // Simplify both sides of the operation
             default -> expr; // If nothing matches, return as is
         };
     }
@@ -427,7 +427,7 @@ public class Chapter4 {
         /*
         Simplifying expressions via record patterns: Imagine that you have an expression (arithmetic, string-based, Abstract Syntax Tree (AST), and so on). Write a program that uses record patterns to simplify the code for evaluating/transforming this expression.
          */
-// Build an example AST for the expression: (5 + -3) * 2
+        // Build an example AST for the expression: (5 + -3) * 2
         Expr expression = new BinaryOp("*",
                 new BinaryOp("+",
                         new Constant(5),
@@ -446,8 +446,6 @@ public class Chapter4 {
 
         // Evaluate again for the simplified expression
         System.out.println("Re-evaluated result: " + evaluate(simplified));
-
-
     }
 
     @Test
@@ -461,8 +459,8 @@ public class Chapter4 {
 
         switch (order) {
             // Only interested in checking the status
-//            case Order(_, _, "SHIPPED") -> System.out.println("Order has been shipped!");
-//            case Order(_, _, "PENDING") -> System.out.println("Order is still pending.");
+            case Order(_, _, String status) when  status.equals("SHIPPED")-> System.out.println("Order has been shipped!");
+            case Order(_, _, String status ) when  status.equals("PENDING")-> System.out.println("Order is still pending.");
             default -> System.out.println("Unhandled order status.");
         }
 
@@ -476,9 +474,7 @@ public class Chapter4 {
         var order1 = new Order(101, 300.0, "John Doe");
 //        var (_, customer, _) = order1; // Ignore id and total, only use customer
 //        System.out.println("Customer: " + customer);
-
-
-    }
+  }
 
     @Test
     public void problem104() {
